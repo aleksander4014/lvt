@@ -76,7 +76,7 @@
 <body>
     <div class="container">
         <h1>Remote Job Listings</h1>
-        <p>Welcome to our remote job listings page. Enter your plot area information and click the button to view job listings with LVT calculations.</p>
+        <p>Welcome to a remote job listings page. Enter your plot area information and click the button to view job listings with LVT calculations.</p>
         
         <form action="{% url 'job_listings' %}" method="get">
             <h2>Plot Area Information</h2>
@@ -151,7 +151,7 @@
             <button type="submit" class="submit-btn">View Job Listings with LVT</button>
         </form>
         
-        <p>Or view job listings without LVT calculations:</p>
+        <p>Or view job listings for no land owners:</p>
         <a href="{% url 'job_listings' %}" class="btn">View Job Listings</a>
     </div>
 </body>
