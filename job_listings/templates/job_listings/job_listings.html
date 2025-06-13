@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Job Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .btn {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        .info-box {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .info-box p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Remote Job Listings</h1>
+        <a href="{% url 'home' %}" class="btn">Back to Home</a>
+        {% if agricultural_area > 0 or building_area > 0 %}
+        <div class="info-box">
+            <h3>LVT Calculation Parameters</h3>
+            <p><strong>Agricultural Plot Area:</strong> {{ agricultural_area }} m²</p>
+            <p><strong>Building Plot Area:</strong> {{ building_area }} m²</p>
+            <!--<p><strong>LVT Calculation Formula:</strong> ((salaryMin + salaryMax) / 2) - 4000, adjusted by plot areas</p>
+            <p><em>Note: LVT is adjusted by adding 1% for each 100 m² of agricultural land and 5% for each 100 m² of building land.</em></p>-->
+        </div>
+        {% endif %}
+        
+        {% if job_count > 0 %}
+            {% if region != '' %}
+                {% if tag != '' %}
+                    <h2>In {{ Region }} for job description {{ tag }} have been found {{ job_count }} job listings with salary information:</h2>
+                    {{ job_listings_html|safe }}
+                 {% else %}
+                    <h2>In {{ Region }} have been found {{ job_count }} job listings with salary information:</h2>
+                    {{ job_listings_html|safe }}
+                {% endif %}
+            {% else %}
+                {% if tag != '' %}
+                    <h2>For job description {{ tag }} have been found {{ job_count }} job listings with salary information:</h2>
+                    {{ job_listings_html|safe }}
+                {% else %}
+                    <h2>Have been found {{ job_count }} job listings with salary information:</h2>
+                    {{ job_listings_html|safe }}
+                {% endif %}
+            {% endif %}
+        {% else %}
+            <p>No job listings with salary information found.</p>
+        {% endif %}
+        
+        
+    </div>
+</body>
+</html>
