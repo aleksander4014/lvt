@@ -5,6 +5,13 @@ import pandas
 import json
 from django.template.response import TemplateResponse
 
+def currencyRate(currency):
+    urlnbp = 'https://api.nbp.pl/api/exchangerates/rates/A/'+currency+'/?format=json'
+    rnbp = requests.get(urlnbp)
+    datanbp = json.loads(rnbp.text)
+    rate = datanbp["rates"][0]["mid"]
+    return rate
+
 def get_job_listings(request):
     """
     View function to fetch and display remote job listings with salary information.
@@ -71,17 +78,27 @@ def get_job_listings(request):
             df2.loc[i, 'salaryMin'] = round(df2.loc[i, 'salaryMin'] * 40 * 4,2)  # 40 hours per week, 4 weeks per month,2)
             #df2.loc[i, 'salaryMax'] = df2.loc[i, 'salaryMax'] * 40 * 4
             df2.loc[i, 'salaryPeriod'] = 'monthly'
-
+    
+    ratesDict = {'USD': currencyRate('USD'),
+                 'EUR': currencyRate('EUR'),
+                 'GBP': currencyRate('GBP'),
+                 'GHF': currencyRate('CHF'),
+                 'CAD': currencyRate('CAD'),
+                 'PLN': 1.0
+                 }
+    
     for i, item in enumerate(df2['salaryCurrency']):
-        if item != 'PLN':
-            df2.loc[i, 'salaryMin'] = round(df2.loc[i, 'salaryMin'] * 4.69,2)
-            #df2.loc[i, 'salaryMax'] = df2.loc[i, 'salaryMax'] * 4.69
-            df2.loc[i, 'salaryCurrency'] = 'PLN'
+        try:
+            df2.loc[i, 'salaryMin'] = round(df2.loc[i, 'salaryMin'] * ratesDict[item],2)
+            df2.loc[i, 'salaryCurrency'] = item+'/'+str(ratesDict[item])
+        except KeyError:
+            df2.loc[i, 'salaryMin'] = df2.loc[i, 'salaryMin']
+            df2.loc[i, 'salaryCurrency'] = item+'/???'
 
     # Calculate LVT based on salary and plot areas
     # Base calculation
     base_lvt = df2['salaryMin'] 
-    df2 = df2.rename(columns={'url': 'Url', 'companyName': 'Company', 'jobTitle': 'Job Title', 'salaryMin': 'Gross Salary', 'salaryCurrency': 'Currency', 'salaryPeriod': 'Period'})
+    df2 = df2.rename(columns={'url': 'Url', 'companyName': 'Company', 'jobTitle': 'Job Title', 'salaryMin': 'Gross Salary (PLN)', 'salaryCurrency': 'Currency/Rate', 'salaryPeriod': 'Period'})
     # Adjust LVT based on plot areas if provided
     if agricultural_area > 0 or building_area > 0:
         # Example formula: Add 1% of LVT for each 100 m² of agricultural land and 5% for each 100 m² of building land
