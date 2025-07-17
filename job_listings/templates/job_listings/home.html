@@ -76,22 +76,12 @@
 <body>
     <div class="container">
         <h1>Remote Job Listings</h1>
-        <p>Welcome to a remote job listings page. Enter your plot area information and click the button to view job listings with LVT calculations.</p>
+        <p>Welcome to my remote job listing page, which includes a land value tax (LVT) calculator.<br>
+You can enter data about the size of your field plots into the form below to simulate your net salary.<br>
+The simulation is based on the 2025 budget for Poland.</p>
         
         <form action="{% url 'job_listings' %}" method="get">
-            <h2>Plot Area Information</h2>
-            <div class="form-group">
-                <label for="agricultural_area">Agricultural Plot Area (m²):</label>
-                <input type="number" id="agricultural_area" name="agricultural_area" min="0" step="0.01" value="0" required>
-            </div>
-            <div class="form-group">
-                <label for="building_area">Building Plot Area (m²):</label>
-                <input type="number" id="building_area" name="building_area" min="0" step="0.01" value="0" required>
-            </div>
-            <div class="form-group">
-                <label for="tag">Job description:</label>
-                <input type="text" id="tag" name="tag">
-            </div>
+            <h2>Job search</h2>
             <div class="form-group">
                 <label for="region">Select Region/Country:</label>
         <select name="region" id="region">
@@ -148,10 +138,22 @@
             <option value="vietnam">Vietnam</option>
         </select>
             </div>
+            <div class="form-group">
+                <label for="tag">Job description:</label>
+                <input type="text" id="tag" name="tag">
+            </div>
+            <div class="form-group">
+                <label for="agricultural_area">Agricultural Plot Area (m²):</label>
+                <input type="number" id="agricultural_area" name="agricultural_area" min="0" step="0.01" value="0" required>
+            </div>
+            <div class="form-group">
+                <label for="building_area">Building Plot Area (m²):</label>
+                <input type="number" id="building_area" name="building_area" min="0" step="0.01" value="0" required>
+            </div>
             <button type="submit" class="submit-btn">View Job Listings with LVT</button>
         </form>
         
-        <p>Or view job listings for no land owners:</p>
+        <p>Or view job listings without LVT calculations:</p>
         <a href="{% url 'job_listings' %}" class="btn">View Job Listings</a>
     </div>
 </body>
