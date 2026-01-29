@@ -47,8 +47,15 @@ def get_job_listings(request):
         Region = region.capitalize()
 
     url='https://jobicy.com/api/v2/remote-jobs?geo=' + str(region) + '&tag=' + str(tag)
-    r = requests.get(url)
-    data = json.loads(r.text)
+    try:
+        r = requests.get(url)
+    except:
+        return HttpResponse('Nie działa requests')
+
+    try:    
+        data = json.loads(r.text)
+    except:
+        return HttpResponse('loads')
     
     try:
         df = pandas.DataFrame(data['jobs'])
@@ -132,3 +139,4 @@ def home(request):
     Home page view.
     """
     return render(request, 'job_listings/home.html')
+
