@@ -55,7 +55,7 @@ def get_job_listings(request):
     try:    
         data = json.loads(r.text)
     except:
-        return HttpResponse('loads')
+        return HttpResponse('data: '+r.texts)
     
     try:
         df = pandas.DataFrame(data['jobs'])
@@ -139,4 +139,5 @@ def home(request):
     Home page view.
     """
     return render(request, 'job_listings/home.html')
+
 
