@@ -7,8 +7,10 @@ from django.template.response import TemplateResponse
 
 def currencyRate(currency):
     urlnbp = 'https://api.nbp.pl/api/exchangerates/rates/A/'+currency+'/?format=json'
-    rnbp = requests.get(urlnbp)
-    datanbp = json.loads(rnbp.text)
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    rnbp = requests.get(urlnbp, headers=headers)
+    rnbp.raise_for_status()
+    datanbp = rnbp.json()
     rate = datanbp["rates"][0]["mid"]
     return rate
 
@@ -46,16 +48,14 @@ def get_job_listings(request):
     finally:
         Region = region.capitalize()
 
-    url='https://jobicy.com/api/v2/remote-jobs?geo=' + str(region) + '&tag=' + str(tag)
     try:
-        r = requests.get(url)
-    except:
-        return HttpResponse(url)
-
-    try:    
-        data = json.loads(r.text)
-    except:
-        return HttpResponse(r.text)
+        url='https://jobicy.com/api/v2/remote-jobs?geo=' + str(region) + '&tag=' + str(tag)
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        r = requests.get(url, headers=headers)
+        r.raise_for_status()
+        data = r.json()
+    except Exception as e:
+        return HttpResponse(f'Wystąpił błąd podczas pobierania danych: {str(e)}')
     
     try:
         df = pandas.DataFrame(data['jobs'])
@@ -139,8 +139,3 @@ def home(request):
     Home page view.
     """
     return render(request, 'job_listings/home.html')
-
-
-
-
-
