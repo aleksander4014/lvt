@@ -49,7 +49,10 @@ def get_job_listings(request):
         Region = region.capitalize()
 
     try:
-        url='https://jobicy.com/api/v2/remote-jobs?geo=' + str(region) + '&tag=' + str(tag)
+        if len(tag) < 3 or len(tag) >50:
+            url='https://jobicy.com/api/v2/remote-jobs?geo=' + str(region)
+        else:
+            url='https://jobicy.com/api/v2/remote-jobs?geo=' + str(region) + '&tag=' + str(tag)
         headers = {'User-Agent': 'Mozilla/5.0'}
         r = requests.get(url, headers=headers)
         r.raise_for_status()
